@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -97,46 +96,77 @@ class _DomainPageState extends State<DomainPage> {
                   children: [
                     Align(
                       alignment: Alignment.topRight,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(baseSize * 0.07),
-                        child: AnimatedButton(
-                          height: baseSize * 0.12,
-                          width: baseSize * 0.32,
-                          color: Colors.orangeAccent,
-                          onPressed: () async {
-                            // Access shared preferences to check if parental lock is enabled
-                            final SharedPreferences prefs =
-                                await SharedPreferences.getInstance();
-                            final bool parentalLockEnabled =
-                                prefs.getBool('parental_lock_enabled') ?? true;
+                      child: AnimatedButton(
+                        onPressed: () async {
+                          // Access shared preferences to check if parental lock is enabled
+                          final SharedPreferences prefs =
+                              await SharedPreferences.getInstance();
+                          final bool parentalLockEnabled =
+                              prefs.getBool('parental_lock_enabled') ?? true;
 
-                            if (parentalLockEnabled) {
-                              if (!context.mounted) return;
+                          if (parentalLockEnabled) {
+                            if (!context.mounted) return;
 
-                              // Fetch the signed-in user (similar to MainPage logic)
-                              final user = await getCurrentUser();
+                            // Fetch the signed-in user (similar to MainPage logic)
+                            final user = await getCurrentUser();
 
-                              // Show PIN verification dialog and navigate to MainWrapper on success
-                              showPinVerificationDialog(
-                                  context, user, const MainWrapper());
-                            } else {
-                              // If parental lock is disabled, navigate to MainWrapper directly
-                              if (!context.mounted) return;
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const MainWrapper()),
-                              );
-                            }
-                          },
-                          child: Text(
-                            "For Parents".tr,
-                            style: TextStyle(
-                              fontSize: baseSize * 0.048,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white,
+                            // Show PIN verification dialog and navigate to MainWrapper on success
+                            showPinVerificationDialog(
+                                context, user, const MainWrapper());
+                          } else {
+                            // If parental lock is disabled, navigate to MainWrapper directly
+                            if (!context.mounted) return;
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const MainWrapper()),
+                            );
+                          }
+                        },
+                        color: const Color.fromARGB(
+                            255, 69, 149, 189), // Button color
+                        height: baseSize * 0.17, // Button height
+                        width: baseSize * 0.41, // Button width
+                        shadowDegree: ShadowDegree.dark, // Shadow intensity
+                        shape: BoxShape.rectangle, // Button shape
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            // CircleAvatar with icon inside
+                            Padding(
+                              padding: const EdgeInsets.only(left: 15.0),
+                              child: CircleAvatar(
+                                radius: baseSize *
+                                    0.04, // Adjust the size as needed
+                                backgroundColor: Colors.white,
+                                child: Icon(
+                                  Icons.people, // People icon
+                                  color: const Color(0xFF309092), // Icon color
+                                  size: baseSize * 0.07, // Icon size
+                                ),
+                              ),
                             ),
-                          ),
+                            SizedBox(
+                                width: baseSize *
+                                    0.04), // Space between icon and text
+                            // Wrapping the text in a Flexible widget
+                            Flexible(
+                              child: Text(
+                                "Parent Corner".tr,
+                                textAlign: TextAlign
+                                    .center, // Center-align the multi-line text
+                                maxLines:
+                                    2, // Allow text to wrap into at most two lines
+                                overflow: TextOverflow
+                                    .visible, // Ensure text doesn't overflow
+                                style: TextStyle(
+                                  fontSize: baseSize * 0.05,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
